@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+URL="https://raw.githubusercontent.com/ivan-hc/AM-application-manager/main"
+case "$1" in
+  '-t'|'template'|'convert')
+	while [ -n "$1" ]
+	do
+	case $2 in
+	*) for var in $2
+	do cd $(xdg-user-dir DESKTOP)
+	mkdir -p am-scripts && cd am-scripts
+	mkdir -p ABOUT
+	APP=$( echo $2 | tr A-Z a-z | sed s/_/-/g )
+	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io -O $APP
+	sed -i s/APPIMAGENAME/$2/g $APP
+	sed -i s/SAMPLE/$APP/g $APP
+	chmod a+x $APP
+	touch ./ABOUT/$APP 
+	echo '◆ '$APP' : ' >> ./list
+	done
+	esac
+	shift
+	done;;
+esac
