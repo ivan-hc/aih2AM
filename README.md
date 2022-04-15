@@ -1,5 +1,5 @@
-# aih2AM
-A script to convert apps from AppImage.Github.io to installation scripts for "AM" Application Manager
+# AppImageHub To "AM" (aih2AM)
+A script to convert apps from AppImage.Github.io to installation scripts for "AM" Application Manager.
 
 ### USAGE
 
@@ -17,4 +17,4 @@ Run the script in the terminal, it will create a `tmp` and `icons` folder in you
 - if `wget` is downloadinding an AppImage, the script works as expected, you can safelly press CTRL+C to abort;
 - if `wget` is not downloading what you need (baybe an AppImage for different architectures), then edit the created script (maybe the lines 28 and 54, or just the line 11).
 
-## This script is part of https://github.com/ivan-hc/AM-Application-Manager
+## This script is part of [ivan-hc/AM-Application-Manager](https://github.com/ivan-hc/AM-Application-Manager).
