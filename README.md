@@ -10,4 +10,6 @@ NOTE: this works only if the AppImage is hosted on GitHub.com.
 
 For more alternative templates, see the `-t` option of the main project, ie "AM" Application Manager.
 
+WARNING: This script supports multiple arguments, so be sure to enter "`_`" or "`-`" in the names as they appear on the catalog's page.
+
 ## This script is part of https://github.com/ivan-hc/AM-Application-Manager
