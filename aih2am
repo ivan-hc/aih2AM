@@ -5,22 +5,34 @@ case "$1" in
   '-t'|'template'|'convert')
 	while [ -n "$1" ]
 	do
-	case $2 in
-	*) for var in $2
+	rm -f /opt/am/.cache/download-args
+	echo $@ | tr ' ' '\n' >> /opt/am/.cache/download-args && echo STOP >> /opt/am/.cache/download-args
+	ARGS=$(sed '1d' /opt/am/.cache/download-args)
+	for arg in $ARGS; do
+	for var in $arg; do
+	if [ $arg == STOP ]; then
+	exit
+	else
+	case $arg in
+	*) for var in $arg
 	do cd $(xdg-user-dir DESKTOP)
 	mkdir -p am-scripts && cd am-scripts
 	mkdir -p ABOUT
-	APP=$( echo $2 | tr A-Z a-z | sed s/_/-/g )
+	APP=$( echo $arg | tr A-Z a-z | sed s/_/-/g )
 	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io -O $APP
-	sed -i s/APPIMAGENAME/$2/g $APP
+	sed -i s/APPIMAGENAME/$arg/g $APP
 	sed -i s/SAMPLE/$APP/g $APP
 	chmod a+x $APP
 	touch ./ABOUT/$APP 
 	echo '◆ '$APP' : ' >> ./list
 	done
+	break
 	esac
-	shift
-	done;;
+	fi
+	done
+	done
+	done
+	shift;;
    *) echo ""; echo ' USAGE: aih2am convert $APPNAME'; echo ""
  	echo ' where $APPNAME is the name of the AppImage as it appear'
 	echo " on the main catalogue, at https://appimage.github.io/apps"
