@@ -15,6 +15,6 @@ WARNING: This script supports multiple arguments, so be sure to enter "`_`" or "
 ### TEST
 Run the script in the terminal, it will create a `tmp` and `icons` folder in your home directory:
 - if `wget` is downloadinding an AppImage, the script works as expected, you can safelly press CTRL+C to abort;
-- if `wget` is not downloading what you need (baybe an AppImage for different architectures), then edit the created script (maybe the lines 28 and 54, or just the line 11).
+- if `wget` is not downloading what you need (maybe an AppImage for different architectures), then edit the created script (maybe the lines 28 and 54, or just the line 11).
 
 ## This script is part of [ivan-hc/AM-Application-Manager](https://github.com/ivan-hc/AM-Application-Manager).
