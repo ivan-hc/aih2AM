@@ -2,6 +2,10 @@
 
 URL="https://raw.githubusercontent.com/ivan-hc/AM-application-manager/main"
 case "$1" in
+	*) echo ""; echo ' USAGE: aih2am convert $APPNAME'; echo ""
+ 	echo ' where $APPNAME is the name of the AppImage as it appear'
+	echo " on the main catalogue, at https://appimage.github.io/apps"
+	echo ' NOTE: this works only if the AppImage is hosted on GitHub.com.'; echo "";;
   '-t'|'template'|'convert')
 	while [ -n "$1" ]
 	do
