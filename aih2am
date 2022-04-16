@@ -5,9 +5,9 @@ case "$1" in
   '-t'|'template'|'convert')
 	while [ -n "$1" ]
 	do
-	rm -f /opt/am/.cache/download-args
-	echo $@ | tr ' ' '\n' >> /opt/am/.cache/download-args && echo STOP >> /opt/am/.cache/download-args
-	ARGS=$(sed '1d' /opt/am/.cache/download-args)
+	rm -f /opt/aih2am/download-args
+	echo $@ | tr ' ' '\n' >> /opt/aih2am/download-args && echo STOP >> /opt/aih2am/download-args
+	ARGS=$(sed '1d' /opt/aih2am/download-args)
 	for arg in $ARGS; do
 	for var in $arg; do
 	if [ $arg == STOP ]; then
@@ -15,16 +15,22 @@ case "$1" in
 	else
 	case $arg in
 	*) for var in $arg
-	do cd $(xdg-user-dir DESKTOP)
+	do
+	cd $(xdg-user-dir DESKTOP)
 	mkdir -p am-scripts && cd am-scripts
 	mkdir -p ABOUT
 	APP=$( echo $arg | tr A-Z a-z | sed s/_/-/g )
+	COMMENT=$(curl -L -s https://raw.githubusercontent.com/AppImage/appimage.github.io/master/apps/$arg.md | grep "Comment:" | cut -c 14-)
+	REPO=$(curl -L -s https://raw.githubusercontent.com/AppImage/appimage.github.io/master/apps/$arg.md | grep -A1 "type: GitHub" | sed -n 2p | cut -c 10-)
 	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io -O $APP
 	sed -i s/APPIMAGENAME/$arg/g $APP
 	sed -i s/SAMPLE/$APP/g $APP
 	chmod a+x $APP
-	touch ./ABOUT/$APP 
-	echo '◆ '$APP' : ' >> ./list
+	echo " " >> ./ABOUT/$APP 
+	echo " $COMMENT" >> ./ABOUT/$APP 
+	echo " " >> ./ABOUT/$APP 
+	echo " SITE: https://github.com/$REPO" >> ./ABOUT/$APP 
+	echo '◆ '$APP' : '$COMMENT'' >> ./list
 	done
 	break
 	esac
