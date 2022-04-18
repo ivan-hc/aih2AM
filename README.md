@@ -1,6 +1,19 @@
 # AppImageHub To "AM" (aih2AM)
 A script to convert apps from AppImage.Github.io to installation scripts for "AM" Application Manager.
 
+### INSTALL
+Use "AM" to install this script, run the command:
+
+    sudo am -i aih2am
+    
+### UNINSTALL
+With "AM":
+
+    sudo am -r aih2am
+Without "AM":
+
+    sudo /opt/aih2am/remove
+
 ### USAGE
 
     aih2am convert $APPNAME
