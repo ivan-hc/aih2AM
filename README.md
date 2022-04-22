@@ -25,6 +25,18 @@ For more alternative templates, see the `-t` option of the main project, ie "AM"
 
 WARNING: This script supports multiple arguments, so be sure to enter "`_`" or "`-`" in the names as they appear on the catalog's page.
 
+### For AppImages not hosted on github.com
+
+Replace the line 25 of the script, ie:
+
+    	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io -O $APP
+with this line:
+
+    	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io-non-GitHub.com -O $APP
+        
+
+Once you have created the script, add manually the value of lines 12 and 14 (and optionally edit line 15).
+
 ### TEST
 All you have to test is the download of the AppImage. During the download you can always press CTRL+C to abort.
 Create a new empty folder and run the scripts there in a terminal window (the script will create a `tmp` and `icons` folder):
