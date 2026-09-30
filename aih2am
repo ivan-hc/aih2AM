@@ -25,7 +25,7 @@ wait
 
 if [ -d ./AM/programs/x86_64 ]; then
 	for a in $ARGS; do
-		_lister
+		_lister &
 	done
 	wait
 	sort -u list > sources.txt
