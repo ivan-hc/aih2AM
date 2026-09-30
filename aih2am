@@ -23,11 +23,12 @@ if [ ! -d ./AM/programs/x86_64 ]; then
 fi
 wait
 
-if [ ! -d ./AM/programs/x86_64 ]; then
+if [ -d ./AM/programs/x86_64 ]; then
 	for a in $ARGS; do
 		_lister
 	done
 	wait
+	sort -u list > sources.txt
+else
+	echo "Directory not found" && exit 1
 fi
-
-sort -u list > sources.txt
