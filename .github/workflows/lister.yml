@@ -23,6 +23,7 @@ jobs:
 
       - name: "Run lister"
         run: |
+          sudo apt update && sudo apt install curl git
           [ ! -x ./aih2am ] && chmod a+x ./aih2am
           ./aih2am
 
