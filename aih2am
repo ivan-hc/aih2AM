@@ -21,10 +21,13 @@ ARGS=$(seq 6000 9516)
 if [ -d ./AM/programs/x86_64 ]; then
 	git clone https://github.com/ivan-hc/AM.git || exit 1
 fi
-
-for a in $ARGS; do
-	_lister &
-done
 wait
 
-sort -u list sources.txt
+if [ -d ./AM/programs/x86_64 ]; then
+	for a in $ARGS; do
+		_lister
+	done
+	wait
+fi
+
+sort -u list > sources.txt
