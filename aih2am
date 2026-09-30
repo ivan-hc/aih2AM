@@ -1,92 +1,30 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-URL="https://raw.githubusercontent.com/ivan-hc/AM-application-manager/main"
-case "$1" in
-  '-t'|'template'|'convert')
-	while [ -n "$1" ]
-	do
-	rm -f /opt/aih2am/download-args
-	echo $@ | tr ' ' '\n' >> /opt/aih2am/download-args && echo STOP >> /opt/aih2am/download-args
-	ARGS=$(sed '1d' /opt/aih2am/download-args)
-	for arg in $ARGS; do
-	for var in $arg; do
-	if [ $arg == STOP ]; then
-	exit
-	else
-	case $arg in
-	*) for var in $arg
-	do
-	cd $(xdg-user-dir DESKTOP)
-	mkdir -p am-scripts && cd am-scripts
-	mkdir -p ABOUT
-	APP=$( echo $arg | tr A-Z a-z | sed s/_/-/g )
-	COMMENT=$(curl -L -s https://raw.githubusercontent.com/AppImage/appimage.github.io/master/apps/$arg.md | grep "Comment:" | cut -c 14-)
-	REPO=$(curl -L -s https://raw.githubusercontent.com/AppImage/appimage.github.io/master/apps/$arg.md | grep -A1 "type: GitHub" | sed -n 2p | cut -c 10-)
-	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io -O $APP
-	sed -i s/APPIMAGENAME/$arg/g $APP
-	sed -i s/SAMPLE/$APP/g $APP
-	chmod a+x $APP
-	echo " " >> ./ABOUT/$APP 
-	echo " $COMMENT" >> ./ABOUT/$APP 
-	echo " " >> ./ABOUT/$APP 
-	echo " SITE: https://github.com/$REPO" >> ./ABOUT/$APP 
-	echo '◆ '$APP' : '$COMMENT'' >> ./list
-	done
-	break
-	esac
+_lister() {
+	body_content=$(curl -Ls "https://api.gh.pkgforge.dev/repos/AppImage/appimage.github.io/issues/$a" | jq -r '.body')
+	wait
+	exists=""
+	if echo "$body_content" | grep -q "^Repository: https://github.com/"; then
+		repo=$(echo "$body_content" | tr '>< ' '\n' | grep "https://github.com/" | sed "s#https://github.com/##g" | head -1)
+		if [ -n "$repo" ]; then
+			for script in ./AM/programs/x86_64/*; do
+				if grep -q "$repo" "$script"; then
+					exists=1
+				fi
+			done
+			[ -z "$exists" ] && echo "$repo" && echo "$repo" >> list
+		fi
 	fi
-	done
-	done
-	done
-	shift;;
-  '-ng'|'convert-ng')
-	while [ -n "$1" ]
-	do
-	rm -f /opt/aih2am/download-args
-	echo $@ | tr ' ' '\n' >> /opt/aih2am/download-args && echo STOP >> /opt/aih2am/download-args
-	ARGS=$(sed '1d' /opt/aih2am/download-args)
-	for arg in $ARGS; do
-	for var in $arg; do
-	if [ $arg == STOP ]; then
-	exit
-	else
-	case $arg in
-	*) for var in $arg
-	do
-	cd $(xdg-user-dir DESKTOP)
-	mkdir -p am-scripts && cd am-scripts
-	mkdir -p ABOUT
-	APP=$( echo $arg | tr A-Z a-z | sed s/_/-/g )
-	COMMENT=$(curl -L -s https://raw.githubusercontent.com/AppImage/appimage.github.io/master/apps/$arg.md | grep "Comment:" | cut -c 14-)
-	HOMEPAGE=$(curl -L -s https://raw.githubusercontent.com/AppImage/appimage.github.io/master/apps/$arg.md | grep "homepage" | cut -c 13-)
-	wget -c $URL/templates/AM-SAMPLE-AppImage.GitHub.io-non-GitHub.com -O $APP
-	sed -i s/APPIMAGENAME/$arg/g $APP
-	sed -i s/SAMPLE/$APP/g $APP
-	sed -i s@MAINSITE@$HOMEPAGE@g $APP
-	chmod a+x $APP
-	echo " " >> ./ABOUT/$APP 
-	echo " $COMMENT" >> ./ABOUT/$APP 
-	echo " " >> ./ABOUT/$APP 
-	echo " SITE: $HOMEPAGE" >> ./ABOUT/$APP 
-	echo '◆ '$APP' : '$COMMENT'' >> ./list
-	done
-	break
-	esac
-	fi
-	done
-	done
-	done
-	shift;;
-  '-h'|'--help'|'help')
- 	echo ""; echo ' USAGE: aih2am [OPTION] [ARGUMENTS]'; echo ""
-	echo " where [OPTION] includes:"; echo ""
-	echo ' ◆ "convert" | "-t" | "-template"
-	for AppImages hosted on github.com'; echo ""
-        echo ' ◆ "convert-ng" | "-ng"
-	for AppImages that are NOT available on github.com'; echo ""
-	echo " Visit https://github.com/ivan-hc/aih2AM for more information"; echo "";;
-   *) echo ""; echo ' USAGE: aih2am convert $APPNAME'; echo ""
- 	echo ' where $APPNAME is the name of the AppImage as it appear'
-	echo " on the main catalogue, at https://appimage.github.io/apps"
-	echo ' NOTE: this works only if the AppImage is hosted on GitHub.com.'; echo "";;
-esac
+}
+
+ARGS=$(seq 6000 9516)
+if [ -d ./AM/programs/x86_64 ]; then
+	git clone https://github.com/ivan-hc/AM.git || exit 1
+fi
+
+for a in $ARGS; do
+	_lister &
+done
+wait
+
+sort -u list sources.txt
