@@ -17,7 +17,7 @@ _lister() {
 	fi
 }
 
-ARGS=$(seq 9685 9916)
+ARGS=$(seq 9917 9950)
 if [ ! -d ./AM/programs/x86_64 ]; then
 	git clone https://github.com/ivan-hc/AM.git || exit 1
 fi
