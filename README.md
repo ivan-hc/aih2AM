@@ -3,6 +3,6 @@
 2. run the workflow https://github.com/ivan-hc/aih2AM/actions/workflows/lister.yml
 3. use the resulting sources.txt file like this
 ```
-APPIMAGE_DEFAULT="1"; ARGS=$(cat sources.txt); for a in $ARGS; do am -y -t https://github.com/"$a"; done
+export APPIMAGE_DEFAULT="1"; ARGS=$(cat sources.txt); for a in $ARGS; do am -y -t https://github.com/"$a"; done
 ```
 4. follow the on screen instructions
