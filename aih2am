@@ -4,8 +4,10 @@ _lister() {
 	body_content=$(curl -Ls "https://api.gh.pkgforge.dev/repos/AppImage/appimage.github.io/issues/$a" | jq -r '.body')
 	wait
 	exists=""
-	if echo "$body_content" | grep -q "^Repository: https://github.com/"; then
-		repo=$(echo "$body_content" | tr '>< ' '\n' | grep "https://github.com/" | sed "s#https://github.com/##g" | head -1)
+	#if echo "$body_content" | grep -q "^Repository: https://github.com/"; then
+		#repo=$(echo "$body_content" | tr '>< ' '\n' | grep "https://github.com/" | sed "s#https://github.com/##g" | head -1)
+	if echo "$body_content" | grep -q "https://github.com/"; then
+		repo=$(echo "$body_content" | tr '>< ' '\n' | grep "https://github.com/" | sed "s#https://github.com/##g; s#/releases.*##g" | head -1)
 		if [ -n "$repo" ]; then
 			for script in ./AM/programs/x86_64/*; do
 				if grep -q "$repo" "$script"; then
@@ -17,7 +19,7 @@ _lister() {
 	fi
 }
 
-ARGS=$(seq 10724 10783)
+ARGS=$(seq 10000 10784)
 if [ ! -d ./AM/programs/x86_64 ]; then
 	git clone https://github.com/ivan-hc/AM.git || exit 1
 fi
